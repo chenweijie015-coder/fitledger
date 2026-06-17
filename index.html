@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitLedger | 记账与训练自律系统</title>
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href="#top" aria-label="稳练首页">
+        <span class="brand-mark">FL</span>
+        <span>
+          <strong>FitLedger</strong>
+          <small>TRAIN · EAT · TRACK</small>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="#money">记账 <span>Money</span></a>
+        <a href="#food">饮食 <span>Food</span></a>
+        <a href="#library">动作库 <span>Library</span></a>
+        <a href="#checkin">打卡 <span>Check-in</span></a>
+        <a href="#review">趋势 <span>Trends</span></a>
+      </nav>
+      <a class="nav-action" href="#workspace">开始记录</a>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-brand" aria-label="品牌名">
+            <span class="hero-brand-en sport-word">FitLedger</span>
+          </div>
+          <p class="eyebrow">个人自律管理 · Personal Discipline</p>
+          <h1 id="hero-title">
+            <span class="outlined-text">把钱花明白，</span>
+            <span class="outlined-text">把训练做扎实。</span>
+          </h1>
+          <p class="subtitle">Spend with intent. Train with rhythm.</p>
+          <p class="hero-copy">
+            从每日消费、训练计划到身体状态，用一个页面实时更新你的自律趋势。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#workspace">体验初版</a>
+            <a class="button secondary" href="#modules">查看模块</a>
+          </div>
+          <div class="hero-metrics" aria-label="产品重点">
+            <span>预算 Budget</span>
+            <span>饮食 Food</span>
+            <span>训练 Training</span>
+            <span>打卡 Check-in</span>
+            <span>趋势 Trends</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-band" id="story" aria-label="品牌理念">
+        <div class="story-copy">
+          <p class="eyebrow">品牌理念 · Brand Story</p>
+          <h2>自律不是硬扛，而是把选择看清楚。</h2>
+          <p>
+            FitLedger 把两件最容易失控的事放在一起：钱和身体。你不需要复杂系统，只需要每天几分钟记录，再看趋势决定下一步。
+          </p>
+        </div>
+        <div class="story-steps" aria-label="使用步骤">
+          <div>
+            <strong>01</strong>
+            <span>记录今天</span>
+            <small>Log Today</small>
+          </div>
+          <div>
+            <strong>02</strong>
+            <span>安排本周</span>
+            <small>Plan Week</small>
+          </div>
+          <div>
+            <strong>03</strong>
+            <span>复盘调整</span>
+            <small>Review Better</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro-band" id="modules" aria-label="核心模块">
+        <div class="section-heading">
+          <p class="eyebrow">核心模块 · Core Modules</p>
+          <h2>记录、饮食、训练、趋势都在同一个节奏里</h2>
+          <p>先让用户每天愿意打开，再逐步把它做成 App。</p>
+        </div>
+        <div class="module-grid">
+          <article class="module" id="money">
+            <span class="module-number">01</span>
+            <h3>记账</h3>
+            <p class="english">Money Tracking</p>
+            <p>记录收入支出、分类预算和本月结余，帮助用户看见钱流向哪里。</p>
+            <ul>
+              <li>月度结余</li>
+              <li>分类支出</li>
+              <li>消费备注</li>
+            </ul>
+          </article>
+          <article class="module" id="food">
+            <span class="module-number">02</span>
+            <h3>饮食</h3>
+            <p class="english">Food Calories</p>
+            <p>记录食物、重量和单位热量，自动计算本次摄入。</p>
+            <ul>
+              <li>食物记录</li>
+              <li>热量计算</li>
+              <li>每日总计</li>
+            </ul>
+          </article>
+          <article class="module" id="training">
+            <span class="module-number">03</span>
+            <h3>动作库</h3>
+            <p class="english">Exercise Library</p>
+            <p>用步骤、错误提醒和训练模板帮助用户正确完成动作。</p>
+            <ul>
+              <li>动作教学</li>
+              <li>常见错误</li>
+              <li>计划引用</li>
+            </ul>
+          </article>
+          <article class="module" id="review">
+            <span class="module-number">04</span>
+            <h3>打卡趋势</h3>
+            <p class="english">Check-in Trends</p>
+            <p>每日打卡后实时更新趋势图，让变化不只靠感觉。</p>
+            <ul>
+              <li>每日打卡</li>
+              <li>状态趋势</li>
+              <li>实时更新</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="library-band reveal-section" id="library" aria-label="训练动作库">
+        <div class="section-heading">
+          <p class="eyebrow">训练动作库 · Exercise Library</p>
+          <h2>搜索动作，查看要点，再加入你的训练。</h2>
+          <p>覆盖常见力量训练、自重训练和有氧动作。图片用于辅助识别，动作步骤和错误提醒才是教学重点。</p>
+        </div>
+        <div class="library-tools" aria-label="动作库搜索">
+          <label>
+            <span>搜索动作 <small>Search Exercise</small></span>
+            <input id="exerciseSearch" type="search" placeholder="卧推 / 深蹲 / shoulder / core" />
+          </label>
+          <label>
+            <span>部位筛选 <small>Muscle Group</small></span>
+            <select id="exerciseFilter">
+              <option value="全部">全部 All</option>
+            </select>
+          </label>
+          <span class="result-count" id="exerciseCount">0 个动作</span>
+        </div>
+        <div class="exercise-layout">
+          <div class="exercise-grid" id="exerciseLibrary"></div>
+          <aside class="exercise-detail" id="exerciseDetail" aria-label="动作教学详情"></aside>
+        </div>
+      </section>
+
+      <section class="dashboard" id="workspace" aria-label="自律工作台">
+        <div class="section-heading">
+          <p class="eyebrow">初版工作台 · MVP Workspace</p>
+          <h2>今天先记录一笔账，安排一次训练。</h2>
+          <p>数据暂存在当前浏览器，本版本用于验证产品体验。</p>
+        </div>
+
+        <div class="summary-row" aria-label="数据概览">
+          <div class="stat">
+            <span>本月结余</span>
+            <strong id="balanceAmount">¥0</strong>
+            <small>Monthly Balance</small>
+          </div>
+          <div class="stat">
+            <span>本周训练完成</span>
+            <strong id="trainingRate">0%</strong>
+            <small>Training Completion</small>
+          </div>
+          <div class="stat">
+            <span>自律评分</span>
+            <strong id="disciplineScore">0</strong>
+            <small>Discipline Score</small>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+          <section class="panel money-panel" aria-labelledby="money-title">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">记账 · Money</p>
+                <h2 id="money-title">收支记录</h2>
+              </div>
+              <span class="panel-tag">Local</span>
+            </div>
+            <form id="expenseForm" class="form-grid">
+              <label>
+                <span>类型 <small>Type</small></span>
+                <select id="entryType" required>
+                  <option value="expense">支出 Expense</option>
+                  <option value="income">收入 Income</option>
+                </select>
+              </label>
+              <label>
+                <span>金额 <small>Amount</small></span>
+                <input id="entryAmount" type="number" min="0" step="0.01" placeholder="89" required />
+              </label>
+              <label>
+                <span>分类 <small>Category</small></span>
+                <select id="entryCategory" required>
+                  <option value="餐饮">餐饮 Food</option>
+                  <option value="交通">交通 Transit</option>
+                  <option value="健身">健身 Fitness</option>
+                  <option value="蛋白补剂">蛋白补剂 Supplements</option>
+                  <option value="装备">装备 Gear</option>
+                  <option value="购物">购物 Shopping</option>
+                  <option value="房租">房租 Rent</option>
+                  <option value="社交">社交 Social</option>
+                  <option value="医疗">医疗 Health</option>
+                  <option value="学习">学习 Learning</option>
+                  <option value="储蓄">储蓄 Saving</option>
+                  <option value="收入">收入 Income</option>
+                </select>
+              </label>
+              <label>
+                <span>备注 <small>Note</small></span>
+                <input id="entryNote" type="text" placeholder="午餐 / 蛋白粉 / 兼职" />
+              </label>
+              <button class="button primary full" type="submit">添加记录</button>
+            </form>
+            <div class="list" id="moneyList" aria-live="polite"></div>
+          </section>
+
+          <section class="panel food-panel" aria-labelledby="food-title">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">饮食 · Food</p>
+                <h2 id="food-title">热量记录</h2>
+              </div>
+              <span class="panel-tag">Calories</span>
+            </div>
+            <form id="foodForm" class="form-grid">
+              <label>
+                <span>食物 <small>Food</small></span>
+                <input id="foodName" type="text" list="foodSuggestions" placeholder="米饭 / 鸡胸肉 / 香蕉" required />
+                <datalist id="foodSuggestions"></datalist>
+              </label>
+              <label>
+                <span>摄入量(g) <small>Amount</small></span>
+                <input id="foodAmount" type="number" min="0" step="1" placeholder="150" required />
+              </label>
+              <label>
+                <span>每100g热量 <small>kcal/100g</small></span>
+                <input id="foodCalories" type="number" min="0" step="1" placeholder="116" required />
+              </label>
+              <label>
+                <span>餐次 <small>Meal</small></span>
+                <select id="foodMeal">
+                  <option value="早餐">早餐 Breakfast</option>
+                  <option value="午餐">午餐 Lunch</option>
+                  <option value="晚餐">晚餐 Dinner</option>
+                  <option value="加餐">加餐 Snack</option>
+                </select>
+              </label>
+              <button class="button primary full" type="submit">计算并记录</button>
+            </form>
+            <div class="food-total">
+              <span>今日摄入</span>
+              <strong id="todayCalories">0 kcal</strong>
+            </div>
+            <div class="food-hint" id="foodHint">输入食物名称后，会自动匹配常见每100g热量，可手动修改。</div>
+            <div class="list" id="foodList" aria-live="polite"></div>
+          </section>
+
+          <section class="panel training-panel" aria-labelledby="training-title">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">健身计划 · Training</p>
+                <h2 id="training-title">本周安排</h2>
+              </div>
+              <span class="panel-tag">Weekly</span>
+            </div>
+            <form id="trainingForm" class="form-grid">
+              <label>
+                <span>日期 <small>Day</small></span>
+                <select id="trainingDay" required>
+                  <option value="周一">周一 Monday</option>
+                  <option value="周二">周二 Tuesday</option>
+                  <option value="周三">周三 Wednesday</option>
+                  <option value="周四">周四 Thursday</option>
+                  <option value="周五">周五 Friday</option>
+                  <option value="周六">周六 Saturday</option>
+                  <option value="周日">周日 Sunday</option>
+                </select>
+              </label>
+              <label>
+                <span>部位 <small>Focus</small></span>
+                <select id="trainingFocus" required>
+                  <option value="胸肩三头">胸肩三头 Push</option>
+                  <option value="背二头">背二头 Pull</option>
+                  <option value="腿臀">腿臀 Legs</option>
+                  <option value="有氧">有氧 Cardio</option>
+                  <option value="核心">核心 Core</option>
+                  <option value="全身">全身 Full Body</option>
+                  <option value="休息">休息 Rest</option>
+                </select>
+              </label>
+              <label class="wide">
+                <span>计划 <small>Plan</small></span>
+                <input id="trainingPlan" type="text" placeholder="卧推 4x8，哑铃推肩 3x10" required />
+              </label>
+              <button class="button primary full" type="submit">加入计划</button>
+            </form>
+            <div class="reminder-box">
+              <div>
+                <strong>训练提醒</strong>
+                <small id="nextReminderText">根据本周计划生成下一次训练提醒。</small>
+              </div>
+              <button class="complete-button" id="enableReminder" type="button">开启提醒</button>
+            </div>
+            <div class="list" id="trainingList" aria-live="polite"></div>
+          </section>
+
+          <section class="panel checkin-panel" id="checkin" aria-labelledby="checkin-title">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">每日打卡 · Daily Check-in</p>
+                <h2 id="checkin-title">今天状态</h2>
+              </div>
+              <span class="panel-tag">Live</span>
+            </div>
+            <form id="checkinForm" class="form-grid">
+              <label>
+                <span>体重 <small>Weight</small></span>
+                <input id="checkinWeight" type="number" min="20" max="250" step="0.1" placeholder="72.5" required />
+              </label>
+              <label>
+                <span>状态 <small>Energy</small></span>
+                <input id="checkinEnergy" type="range" min="1" max="10" value="7" />
+              </label>
+              <label>
+                <span>训练 <small>Workout</small></span>
+                <select id="checkinWorkout">
+                  <option value="完成">完成 Done</option>
+                  <option value="轻量">轻量 Light</option>
+                  <option value="休息">休息 Rest</option>
+                  <option value="跳过">跳过 Missed</option>
+                </select>
+              </label>
+              <label>
+                <span>消费 <small>Spending</small></span>
+                <input id="checkinSpending" type="number" min="0" step="0.01" placeholder="58" required />
+              </label>
+              <button class="button primary full" type="submit">保存今日打卡</button>
+            </form>
+          </section>
+
+          <section class="panel trends-panel" aria-labelledby="trends-title">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">趋势图 · Trends</p>
+                <h2 id="trends-title">实时更新</h2>
+              </div>
+              <span class="panel-tag">Daily</span>
+            </div>
+            <div class="trend-canvas" id="trendCanvas" aria-label="每日趋势图"></div>
+          </section>
+
+          <section class="panel review-panel" aria-labelledby="review-title">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">周复盘 · Review</p>
+                <h2 id="review-title">这一周怎么样</h2>
+              </div>
+              <span class="panel-tag">Reflect</span>
+            </div>
+            <form id="reviewForm" class="review-form">
+              <label>
+                <span>本周状态 <small>Energy</small></span>
+                <input id="reviewEnergy" type="range" min="1" max="10" value="7" />
+              </label>
+              <label>
+                <span>一句复盘 <small>Reflection</small></span>
+                <textarea id="reviewText" rows="4" placeholder="这周训练完成得不错，但外卖花费偏高。"></textarea>
+              </label>
+              <label>
+                <span>下周重点 <small>Next Focus</small></span>
+                <input id="nextFocus" type="text" placeholder="控制餐饮预算，完成 4 次训练" />
+              </label>
+              <button class="button primary full" type="submit">生成周复盘</button>
+            </form>
+            <div class="review-output" id="reviewOutput">
+              <p class="empty">完成一次记录后，这里会显示你的周复盘摘要。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="audience-band" aria-label="适合人群">
+        <div class="section-heading">
+          <p class="eyebrow">适合人群 · For People Who</p>
+          <h2>不是为了完美生活，是为了少一点失控。</h2>
+        </div>
+        <div class="audience-grid">
+          <article>
+            <h3>想开始记账的人</h3>
+            <p>不想研究复杂财务软件，只想知道这个月钱花在哪里。</p>
+          </article>
+          <article>
+            <h3>有健身习惯的人</h3>
+            <p>希望训练计划更稳定，不再靠当天心情决定练不练。</p>
+          </article>
+          <article>
+            <h3>想每周复盘的人</h3>
+            <p>把消费、训练、状态放到一张表里，形成可持续反馈。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>稳练 FitLedger</span>
+      <span>先把生活记录清楚，再把产品做大。</span>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
