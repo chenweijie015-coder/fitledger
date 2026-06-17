@@ -163,12 +163,21 @@ const initialState = {
 };
 
 let state = loadState();
+document.documentElement.classList.add("js-ready");
 
 function loadState() {
   const saved = window.localStorage.getItem(storageKey);
   if (!saved) return clone(initialState);
   try {
-    return { ...clone(initialState), ...JSON.parse(saved) };
+    const parsed = JSON.parse(saved);
+    const next = { ...clone(initialState), ...parsed };
+    if (!exerciseDatabase.some((exercise) => exercise.id === next.selectedExercise)) {
+      next.selectedExercise = "bench";
+    }
+    if (!next.exerciseFilter || !["全部", ...new Set(exerciseDatabase.map((exercise) => exercise.group))].includes(next.exerciseFilter)) {
+      next.exerciseFilter = "全部";
+    }
+    return next;
   } catch {
     return clone(initialState);
   }
@@ -192,7 +201,8 @@ function calculateStats() {
   const completed = state.training.filter((item) => item.done).length;
   const total = state.training.length || 1;
   const trainingRate = Math.round((completed / total) * 100);
-  const latestEnergy = state.checkins.at(-1)?.energy || 5;
+  const latestCheckin = state.checkins.length ? state.checkins[state.checkins.length - 1] : null;
+  const latestEnergy = latestCheckin ? latestCheckin.energy : 5;
   const spendingScore = income === 0 ? 45 : Math.max(20, Math.round(((income - expense) / income) * 60 + 40));
   const disciplineScore = Math.max(0, Math.min(100, Math.round(trainingRate * 0.45 + spendingScore * 0.35 + latestEnergy * 2)));
   return { balance: income - expense, trainingRate, disciplineScore };
