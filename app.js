@@ -75,6 +75,235 @@ const exerciseSeed = [
   ["wall-sit", "自重", "靠墙静蹲", "Wall Sit", "靠墙静蹲 4x60秒，提踵 4x15"]
 ];
 
+const guidancePresets = {
+  bench: {
+    steps: ["肩胛后缩下沉，双脚踩稳地面，眼睛在杠铃正下方。", "杠铃下放到胸中下部，前臂尽量垂直地面。", "推起时保持胸部发力，手腕在杠铃正下方，不要耸肩。"],
+    mistakes: ["肘部外展过大", "臀部离凳", "杠铃下放位置忽高忽低"]
+  },
+  inclinePress: {
+    steps: ["凳面调到约 30-45 度，肩胛收紧贴住靠背。", "哑铃下放到上胸两侧，肘部略低于肩。", "向上推到哑铃接近但不相撞，保持上胸持续受力。"],
+    mistakes: ["凳面角度过高练成推肩", "手腕后折", "下放太浅"]
+  },
+  pushup: {
+    steps: ["双手略宽于肩，身体从头到脚成一直线。", "下降时肘部约 45 度向后，胸口靠近地面。", "推起时收紧腹部和臀部，避免腰部下塌。"],
+    mistakes: ["塌腰", "只点头不下降胸口", "肘部完全横向打开"]
+  },
+  fly: {
+    steps: ["肩胛稳定，肘部保持微屈，先把胸打开。", "沿弧线把手臂向身体中线靠拢，想象夹住胸肌。", "还原时慢慢打开，不要让肩膀被重量向后拉扯。"],
+    mistakes: ["手臂弯曲太多变成推举", "重量过大导致肩前侧疼", "动作底部失控"]
+  },
+  dips: {
+    steps: ["握稳双杠，肩胛下沉，身体略微前倾。", "慢慢下降到胸肩有拉伸感，肘部向后走。", "用胸和三头发力推起，不要在顶部耸肩。"],
+    mistakes: ["下降过深导致肩不适", "身体晃动", "只用手腕硬撑"]
+  },
+  pullup: {
+    steps: ["双手略宽于肩，先让肩胛下沉再开始拉。", "胸口向单杠靠近，想象用肘部向下拉。", "下降时控制身体，不要完全松掉肩膀。"],
+    mistakes: ["只用手臂硬拉", "身体大幅摆动", "下放太快"]
+  },
+  pulldown: {
+    steps: ["坐稳后先沉肩，胸口微微上挺。", "把横杆拉向上胸，肘部沿身体两侧向下。", "还原时让背阔肌被拉长，但不要耸肩。"],
+    mistakes: ["身体后仰太多", "用手腕把杆拉下来", "拉到脖子后方"]
+  },
+  row: {
+    steps: ["坐稳或俯身后保持脊柱中立，先收紧核心。", "拉动时肘部向身体后方走，肩胛向中间靠拢。", "还原时控制肩胛前伸，背部保持张力。"],
+    mistakes: ["耸肩", "腰背来回甩", "只用二头发力"]
+  },
+  oneArmRow: {
+    steps: ["支撑侧手脚稳定，躯干不要旋转。", "哑铃向髋部方向拉，肘部贴近身体。", "顶峰略停顿，再慢慢下放到背阔肌被拉长。"],
+    mistakes: ["身体打开借力", "哑铃拉向肩膀", "下放时塌腰"]
+  },
+  deadlift: {
+    steps: ["脚掌站在杠铃中线下方，髋部后坐，背部保持中立。", "先拉紧杠铃和身体，再用腿蹬地把杠带起。", "杠铃贴近小腿和大腿上升，顶端夹紧臀部。"],
+    mistakes: ["弓背起拉", "杠铃离身体太远", "顶端过度后仰"]
+  },
+  shrug: {
+    steps: ["双手持哑铃自然站立，核心收紧。", "肩膀垂直向上耸起，想象耳朵靠近肩峰。", "顶端短暂停顿后慢慢下放，不要画圈。"],
+    mistakes: ["肩膀绕圈", "头向前伸", "用手臂弯举借力"]
+  },
+  shoulderPress: {
+    steps: ["坐姿或站姿保持核心收紧，哑铃起始在耳朵两侧。", "向上推到手臂接近伸直，肘部保持在手腕下方。", "下放到肩部可控位置，不要让腰椎代偿。"],
+    mistakes: ["过度后仰", "耸肩顶重量", "下放不对称"]
+  },
+  raise: {
+    steps: ["身体站稳，手肘微屈，先降低斜方肌参与。", "手臂抬到肩高附近，动作路径稳定。", "下放时保持控制，让肩部持续受力。"],
+    mistakes: ["甩动借力", "耸肩", "抬得过高导致肩夹挤"]
+  },
+  rearDelt: {
+    steps: ["髋部后坐或面向绳索，胸背保持稳定。", "用后束带动手臂向外打开，肩胛自然后收。", "顶峰停顿一秒，再慢慢回到起点。"],
+    mistakes: ["用斜方肌耸肩", "手臂弯曲过多", "重量太大导致身体晃动"]
+  },
+  squat: {
+    steps: ["双脚与肩同宽，脚尖自然外展，核心先收紧。", "下蹲时膝盖跟随脚尖方向，髋部和膝盖同时弯曲。", "站起时脚掌均匀发力，保持胸腔打开。"],
+    mistakes: ["膝盖内扣", "弓背塌腰", "重心过度前移"]
+  },
+  legPress: {
+    steps: ["背部贴紧靠垫，双脚放在踏板中部略宽于肩。", "下放到膝盖接近 90 度或个人可控深度。", "蹬起时脚掌发力，膝盖跟随脚尖方向。"],
+    mistakes: ["膝盖锁死", "下放时臀部离垫", "脚跟离开踏板"]
+  },
+  lunge: {
+    steps: ["向前或向后迈步，身体保持直立。", "下降时前脚脚掌踩稳，前膝跟随脚尖。", "用前腿臀腿发力站回，保持左右节奏一致。"],
+    mistakes: ["步幅太小导致膝盖压力大", "身体左右晃", "后脚蹬地过多"]
+  },
+  legCurl: {
+    steps: ["调整轴心对准膝关节，身体贴稳器械。", "用腘绳肌把脚跟卷向臀部，顶峰停顿。", "慢慢还原，避免膝盖完全松掉。"],
+    mistakes: ["臀部离垫", "速度太快", "脚尖乱晃导致发力分散"]
+  },
+  legExtension: {
+    steps: ["膝关节对准器械轴心，背部贴住靠垫。", "用股四头肌伸膝到接近伸直，顶峰收紧。", "慢慢下放到可控角度，不要让重量片砸回。"],
+    mistakes: ["借身体后仰甩起", "顶端暴力锁膝", "坐垫位置太远"]
+  },
+  calfRaise: {
+    steps: ["前脚掌踩稳，脚跟自然下沉到小腿被拉伸。", "用小腿发力把脚跟抬到最高点。", "顶峰停顿后慢慢下降，保持脚踝路径稳定。"],
+    mistakes: ["上下弹震", "幅度太短", "脚踝向内外歪"]
+  },
+  hipThrust: {
+    steps: ["上背靠住凳沿，脚掌踩稳，杠铃放在髋部。", "收下巴、卷骨盆，用臀部把髋推到身体接近水平。", "顶峰夹紧臀部，再控制下放。"],
+    mistakes: ["腰椎过度反弓", "脚离身体太远", "只追求重量不顶峰收缩"]
+  },
+  hipHinge: {
+    steps: ["双脚站稳，膝盖微屈，先把髋向后推。", "杠铃或哑铃贴近腿部下降，背部保持中立。", "感到大腿后侧拉伸后，用臀腿把髋推回。"],
+    mistakes: ["蹲得太多变深蹲", "弓背", "重量离身体太远"]
+  },
+  hipAbduction: {
+    steps: ["骨盆坐稳，核心收紧，脚和膝盖位置固定。", "用臀中肌把膝盖向外打开，顶峰停顿。", "慢慢回到起点，不要让重量片完全砸回。"],
+    mistakes: ["身体大幅前后摆", "借惯性弹开", "动作幅度过小"]
+  },
+  curl: {
+    steps: ["上臂贴近身体，肩膀放松，手腕保持中立。", "用二头肌弯举到前臂接近竖直。", "下放时控制离心，不要让肘部向后漂。"],
+    mistakes: ["身体后仰甩重量", "手腕乱折", "肘部前后移动太多"]
+  },
+  tricepsPushdown: {
+    steps: ["身体微微前倾，上臂固定在身体两侧。", "用三头肌把绳索或直杆下压到手臂伸直。", "顶峰外旋或停顿，再控制还原到前臂上抬。"],
+    mistakes: ["肘部向前后晃", "耸肩下压", "重量太大导致身体压下去"]
+  },
+  skullCrusher: {
+    steps: ["仰卧后上臂略向后倾，肩膀稳定。", "弯曲肘部把重量下放到额头后方。", "保持上臂不乱动，用三头肌伸直手臂。"],
+    mistakes: ["肘部大幅外张", "下放到脸上太危险", "肩部代偿摆动"]
+  },
+  plank: {
+    steps: ["肘部在肩膀正下方，脚尖踩稳。", "收紧腹部和臀部，让身体成一条直线。", "保持自然呼吸，不要憋气或耸肩。"],
+    mistakes: ["塌腰", "臀部抬太高", "脖子过度仰起"]
+  },
+  deadBug: {
+    steps: ["仰卧屈髋屈膝，腰背轻贴地面。", "对侧手脚慢慢伸远，核心保持不拱腰。", "回到起点后换边，动作越慢越有效。"],
+    mistakes: ["腰离开地面", "速度太快", "肩颈紧张"]
+  },
+  crunch: {
+    steps: ["仰卧屈膝，下背自然贴地。", "用腹部卷起上背，肋骨向骨盆靠近。", "顶峰停顿后慢慢回落，不要用手拉头。"],
+    mistakes: ["拉脖子", "坐起幅度过大", "借惯性弹起"]
+  },
+  hangingLegRaise: {
+    steps: ["双手悬垂，肩胛保持稳定，身体减少摆动。", "骨盆后卷，把膝盖或腿向上抬。", "慢慢下放，保持腹部控制。"],
+    mistakes: ["甩腿借力", "只屈髋不卷腹", "下放失控"]
+  },
+  twist: {
+    steps: ["坐稳后身体微微后倾，核心收紧。", "带动胸腔左右旋转，手随身体走。", "每次转动都控制停顿，不要只甩手。"],
+    mistakes: ["腰椎硬拧", "速度太快", "肩膀代替核心发力"]
+  },
+  sidePlank: {
+    steps: ["肘部在肩膀下方，身体侧向成一直线。", "把髋抬起，腹斜肌和臀中肌同时发力。", "保持骨盆不前后翻，平稳呼吸。"],
+    mistakes: ["髋部下掉", "肩膀顶不住", "身体向前后滚动"]
+  },
+  cardioSteady: {
+    steps: ["先用 5 分钟低强度热身，逐渐进入目标心率。", "保持能持续说短句的节奏，动作放松稳定。", "结束前慢慢降速，给心率回落时间。"],
+    mistakes: ["一开始冲太快", "忽略热身和冷身", "为了速度牺牲动作姿态"]
+  },
+  rowingMachine: {
+    steps: ["先蹬腿，再打开髋部，最后手臂拉到肋骨下方。", "回程顺序相反：手臂、髋部、膝盖。", "保持背部中立，用腿部输出主要力量。"],
+    mistakes: ["先拉手臂", "弓背滑行", "节奏混乱"]
+  },
+  jumpRope: {
+    steps: ["手肘靠近身体，用手腕带动绳子。", "脚尖轻轻离地，落地保持膝盖微屈。", "先稳定节奏，再增加速度或花样。"],
+    mistakes: ["跳得太高", "用肩膀大幅甩绳", "落地声音太重"]
+  },
+  burpee: {
+    steps: ["下蹲撑地后双脚向后跳到平板位。", "完成俯卧撑或保持支撑后，双脚回到手旁。", "站起或跳起时收紧核心，保持节奏。"],
+    mistakes: ["塌腰落地", "动作散乱追求数量", "膝盖内扣跳起"]
+  },
+  kettlebellSwing: {
+    steps: ["壶铃在身前，髋部后坐让壶铃向后摆。", "用臀腿爆发伸髋，壶铃自然摆到胸前。", "手臂只是连接壶铃，不主动前平举。"],
+    mistakes: ["蹲起代替髋铰链", "用肩膀抬壶铃", "腰背弯曲"]
+  },
+  boxJump: {
+    steps: ["站在箱前，髋膝一起预摆。", "双脚同时发力跳上箱，落地时膝盖跟随脚尖。", "站稳后再走下，不要急着反跳。"],
+    mistakes: ["箱子过高导致摔倒", "落地膝盖内扣", "疲劳后继续硬跳"]
+  },
+  wallSit: {
+    steps: ["背部贴墙，脚向前走到膝盖约 90 度。", "膝盖对准脚尖，核心收紧。", "保持呼吸和大腿张力，不要用手撑腿。"],
+    mistakes: ["膝盖超过脚尖太多", "背离开墙", "重心压到脚尖"]
+  }
+};
+
+const exercisePresetMap = {
+  bench: "bench",
+  "incline-db-press": "inclinePress",
+  pushup: "pushup",
+  "cable-fly": "fly",
+  "db-fly": "fly",
+  "pec-deck": "fly",
+  dips: "dips",
+  pullup: "pullup",
+  "lat-pulldown": "pulldown",
+  "seated-row": "row",
+  "one-arm-row": "oneArmRow",
+  "inverted-row": "row",
+  "tbar-row": "row",
+  deadlift: "deadlift",
+  shrug: "shrug",
+  "shoulder-press": "shoulderPress",
+  "arnold-press": "shoulderPress",
+  "lateral-raise": "raise",
+  "front-raise": "raise",
+  "face-pull": "rearDelt",
+  "rear-delt-fly": "rearDelt",
+  "pull-apart": "rearDelt",
+  squat: "squat",
+  "bodyweight-squat": "squat",
+  "leg-press": "legPress",
+  lunge: "lunge",
+  "bulgarian-split-squat": "lunge",
+  "leg-curl": "legCurl",
+  "leg-extension": "legExtension",
+  "calf-raise": "calfRaise",
+  "hip-thrust": "hipThrust",
+  "glute-bridge": "hipThrust",
+  rdl: "hipHinge",
+  "hip-abduction": "hipAbduction",
+  kickback: "hipAbduction",
+  "biceps-curl": "curl",
+  "hammer-curl": "curl",
+  "preacher-curl": "curl",
+  "triceps-pushdown": "tricepsPushdown",
+  "skull-crusher": "skullCrusher",
+  "close-grip-bench": "bench",
+  plank: "plank",
+  "dead-bug": "deadBug",
+  crunch: "crunch",
+  "mountain-climber": "plank",
+  "hanging-leg-raise": "hangingLegRaise",
+  "russian-twist": "twist",
+  "side-plank": "sidePlank",
+  run: "cardioSteady",
+  cycling: "cardioSteady",
+  elliptical: "cardioSteady",
+  "stair-climber": "cardioSteady",
+  rowing: "rowingMachine",
+  "jump-rope": "jumpRope",
+  burpee: "burpee",
+  "battle-rope": "cardioSteady",
+  "kettlebell-swing": "kettlebellSwing",
+  "box-jump": "boxJump",
+  "wall-sit": "wallSit"
+};
+
+function buildVideoLinks(title, en) {
+  const query = encodeURIComponent(`${title} ${en} 正确动作 教学`);
+  return {
+    bilibili: `https://search.bilibili.com/all?keyword=${query}`,
+    youtube: `https://www.youtube.com/results?search_query=${query}`
+  };
+}
+
 const exerciseDatabase = exerciseSeed.map(([id, group, title, en, template]) => ({
   id,
   group,
@@ -82,36 +311,10 @@ const exerciseDatabase = exerciseSeed.map(([id, group, title, en, template]) => 
   en,
   image: imageByGroup[group],
   template,
-  steps: [
-    "先调整站姿或器械位置，保持核心收紧。",
-    "用目标肌群发力完成动作，避免借力和失控。",
-    "还原阶段放慢速度，保持关节稳定和呼吸节奏。"
-  ],
-  mistakes: ["动作太快导致失控", "只追求重量忽略姿势", "关节方向和发力方向不一致"]
+  steps: guidancePresets[exercisePresetMap[id]].steps,
+  mistakes: guidancePresets[exercisePresetMap[id]].mistakes,
+  video: buildVideoLinks(title, en)
 }));
-
-const featuredDetails = {
-  pullup: {
-    steps: ["双手略宽于肩，先让肩胛下沉。", "胸口向单杠靠近，想象用肘部向下拉。", "下降时控制身体，不要完全松掉肩膀。"],
-    mistakes: ["只用手臂硬拉", "身体大幅摆动", "下放太快"]
-  },
-  squat: {
-    steps: ["双脚与肩同宽，脚尖自然外展。", "下蹲时膝盖跟随脚尖方向，核心收紧。", "站起时脚掌均匀发力，避免膝盖内扣。"],
-    mistakes: ["膝盖内扣", "弓背塌腰", "重心过度前移"]
-  },
-  bench: {
-    steps: ["肩胛后缩下沉，双脚踩稳地面。", "杠铃下降到胸中下部，手腕保持中立。", "推起时保持胸部发力，不要耸肩。"],
-    mistakes: ["肘部外展过大", "臀部离凳", "下放速度失控"]
-  },
-  plank: {
-    steps: ["肘部在肩膀正下方，脚尖踩稳。", "收紧腹部和臀部，让身体成一条直线。", "保持自然呼吸，不要憋气。"],
-    mistakes: ["塌腰", "臀部抬太高", "脖子过度仰起"]
-  }
-};
-
-exerciseDatabase.forEach((exercise) => {
-  if (featuredDetails[exercise.id]) Object.assign(exercise, featuredDetails[exercise.id]);
-});
 
 const foodDatabase = [
   ["米饭", 116, "主食"], ["面条", 137, "主食"], ["馒头", 223, "主食"], ["全麦面包", 246, "主食"],
@@ -159,6 +362,8 @@ const initialState = {
   selectedExercise: "bench",
   exerciseSearch: "",
   exerciseFilter: "全部",
+  exerciseView: "list",
+  exerciseExpanded: false,
   review: null
 };
 
@@ -202,7 +407,10 @@ function normalizeState(parsed) {
   if (!next.exerciseFilter || validFilters.indexOf(next.exerciseFilter) === -1) {
     next.exerciseFilter = "全部";
   }
-  if (typeof next.exerciseSearch !== "string") next.exerciseSearch = "";
+  next.exerciseSearch = "";
+  next.exerciseFilter = "全部";
+  next.exerciseView = "list";
+  next.exerciseExpanded = false;
   return next;
 }
 
@@ -372,9 +580,19 @@ function renderExerciseFilters() {
 
 function renderExerciseLibrary() {
   const library = document.querySelector("#exerciseLibrary");
+  const libraryBand = document.querySelector("#library");
   const results = filteredExercises();
+  const isCompactMobileList = isMobileLibraryView()
+    && state.exerciseView !== "detail"
+    && !state.exerciseExpanded
+    && !state.exerciseSearch.trim()
+    && state.exerciseFilter === "全部";
+  const visibleResults = isCompactMobileList ? results.slice(0, 12) : results;
   document.querySelector("#exerciseCount").textContent = `${results.length} 个动作`;
   library.innerHTML = "";
+  if (libraryBand) {
+    libraryBand.classList.toggle("mobile-detail-open", state.exerciseView === "detail");
+  }
 
   if (!results.some((exercise) => exercise.id === state.selectedExercise) && results[0]) {
     state.selectedExercise = results[0].id;
@@ -386,7 +604,18 @@ function renderExerciseLibrary() {
     return;
   }
 
-  results.forEach((exercise) => {
+  if (isCompactMobileList) {
+    const compactHint = document.createElement("div");
+    compactHint.className = "mobile-library-hint";
+    compactHint.innerHTML = `
+      <strong>常用动作先显示 12 个</strong>
+      <span>可以搜索动作、按部位筛选，或展开完整动作库。</span>
+      <button type="button" id="expandExerciseList">展开全部动作</button>
+    `;
+    library.appendChild(compactHint);
+  }
+
+  visibleResults.forEach((exercise) => {
     const card = document.createElement("article");
     card.className = `exercise-card ${state.selectedExercise === exercise.id ? "active" : ""}`;
     card.dataset.exercise = exercise.id;
@@ -395,11 +624,20 @@ function renderExerciseLibrary() {
       <div>
         <h3>${exercise.title}</h3>
         <p>${exercise.en} · ${exercise.group}</p>
-        <button type="button" data-action="use-template">加入本周计划</button>
+        <button type="button" data-action="open-detail">查看动作详情</button>
       </div>
     `;
     library.appendChild(card);
   });
+
+  if (isCompactMobileList && results.length > visibleResults.length) {
+    const moreButton = document.createElement("button");
+    moreButton.className = "library-expand-button";
+    moreButton.type = "button";
+    moreButton.id = "expandExerciseListBottom";
+    moreButton.textContent = `查看全部 ${results.length} 个动作`;
+    library.appendChild(moreButton);
+  }
   renderExerciseDetail();
 }
 
@@ -411,6 +649,7 @@ function renderExerciseDetail() {
     return;
   }
   detail.innerHTML = `
+    <button class="detail-back" type="button" id="backToExerciseList">返回动作列表</button>
     <img src="${exercise.image}" alt="${exercise.title}动作详情图片" />
     <div class="exercise-detail-body">
       <h3>${exercise.title}</h3>
@@ -425,6 +664,14 @@ function renderExerciseDetail() {
           <ul>${exercise.mistakes.map((mistake) => `<li>${mistake}</li>`).join("")}</ul>
         </section>
       </div>
+      <div class="video-box">
+        <h4>视频教程 Video Tutorial</h4>
+        <p>点击后会打开该动作的教程搜索结果，优先选择真人完整示范、讲解清晰、评论区反馈正常的视频。</p>
+        <div class="video-links">
+          <a href="${exercise.video.bilibili}" target="_blank" rel="noopener">B站教程</a>
+          <a href="${exercise.video.youtube}" target="_blank" rel="noopener">YouTube Tutorial</a>
+        </div>
+      </div>
       <div class="template-box">
         <h4>训练模板 Template</h4>
         <p>${exercise.template}</p>
@@ -432,6 +679,27 @@ function renderExerciseDetail() {
       </div>
     </div>
   `;
+}
+
+function isMobileLibraryView() {
+  return window.matchMedia && window.matchMedia("(max-width: 560px)").matches;
+}
+
+function openExerciseDetail(exerciseId) {
+  state.selectedExercise = exerciseId;
+  if (isMobileLibraryView()) state.exerciseView = "detail";
+  saveState();
+  renderExerciseLibrary();
+  if (isMobileLibraryView()) {
+    document.querySelector("#library").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function closeExerciseDetail() {
+  state.exerciseView = "list";
+  saveState();
+  renderExerciseLibrary();
+  document.querySelector("#library").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderTrend() {
@@ -629,24 +897,35 @@ function bindEvents() {
 
   on("#exerciseSearch", "input", (event) => {
     state.exerciseSearch = event.target.value;
+    state.exerciseView = "list";
+    state.exerciseExpanded = false;
     renderExerciseLibrary();
   });
 
   on("#exerciseFilter", "change", (event) => {
     state.exerciseFilter = event.target.value;
+    state.exerciseView = "list";
+    state.exerciseExpanded = event.target.value !== "全部";
     renderExerciseLibrary();
   });
 
   on("#exerciseLibrary", "click", (event) => {
+    if (closestElement(event.target, "#expandExerciseList") || closestElement(event.target, "#expandExerciseListBottom")) {
+      state.exerciseExpanded = true;
+      saveState();
+      renderExerciseLibrary();
+      return;
+    }
     const card = closestElement(event.target, ".exercise-card");
     if (!card) return;
-    state.selectedExercise = card.dataset.exercise;
-    saveState();
-    renderExerciseLibrary();
-    if (closestElement(event.target, "button")) useSelectedExerciseTemplate();
+    openExerciseDetail(card.dataset.exercise);
   });
 
   on("#exerciseDetail", "click", (event) => {
+    if (closestElement(event.target, "#backToExerciseList")) {
+      closeExerciseDetail();
+      return;
+    }
     if (closestElement(event.target, "#useExerciseTemplate")) useSelectedExerciseTemplate();
   });
 
