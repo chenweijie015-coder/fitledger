@@ -20,6 +20,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -40,6 +41,14 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: rgba(214, 75, 39, 0.18);
 }
 
 .site-header {
@@ -778,7 +787,9 @@ textarea {
   border-radius: 0;
   background: #fbfaf7;
   color: var(--ink);
+  min-height: 48px;
   padding: 13px 12px;
+  font-size: 16px;
   outline: none;
 }
 
@@ -834,6 +845,7 @@ textarea:focus {
   border: 1px solid var(--line);
   background: var(--black);
   color: #fff;
+  min-height: 42px;
   padding: 9px 12px;
   cursor: pointer;
   font-size: 12px;
@@ -957,6 +969,7 @@ textarea:focus {
   transform: translateY(28px);
 }
 
+.js-ready .is-visible,
 .is-visible {
   opacity: 1;
   transform: translateY(0);
@@ -969,6 +982,15 @@ textarea:focus {
 .exercise-detail {
   opacity: 1;
   transform: none;
+}
+
+.storage-warning,
+.app-error {
+  border: 1px solid rgba(214, 75, 39, 0.28);
+  background: rgba(214, 75, 39, 0.08);
+  color: var(--accent-dark);
+  padding: 12px 14px;
+  font-weight: 800;
 }
 
 @keyframes heroDrift {
@@ -1024,6 +1046,16 @@ textarea:focus {
   .hero {
     min-height: 86vh;
     padding-top: 110px;
+  }
+
+  .js-ready .reveal-section,
+  .js-ready .module,
+  .js-ready .panel,
+  .js-ready .audience-grid article,
+  .js-ready .story-copy,
+  .js-ready .story-steps {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -1102,6 +1134,23 @@ textarea:focus {
 
   .exercise-card {
     min-height: 240px;
+  }
+
+  .exercise-card button,
+  .button,
+  .complete-button,
+  .nav-action {
+    min-height: 44px;
+  }
+
+  .item {
+    grid-template-columns: 1fr;
+  }
+
+  .item .amount,
+  .item .complete-button {
+    justify-self: stretch;
+    text-align: center;
   }
 
   .exercise-grid {

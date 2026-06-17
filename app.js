@@ -162,29 +162,98 @@ const initialState = {
   review: null
 };
 
+let storageAvailable = true;
+let storageNoticeShown = false;
 let state = loadState();
 document.documentElement.classList.add("js-ready");
 
+function safeReadStorage(key) {
+  try {
+    if (!window.localStorage) return null;
+    return window.localStorage.getItem(key);
+  } catch (error) {
+    storageAvailable = false;
+    return null;
+  }
+}
+
+function safeWriteStorage(key, value) {
+  try {
+    if (!storageAvailable || !window.localStorage) return false;
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch (error) {
+    storageAvailable = false;
+    showStorageNotice();
+    return false;
+  }
+}
+
+function normalizeState(parsed) {
+  const defaults = clone(initialState);
+  const next = Object.assign({}, defaults, parsed && typeof parsed === "object" ? parsed : {});
+  ["money", "foods", "training", "checkins"].forEach((key) => {
+    if (!Array.isArray(next[key])) next[key] = defaults[key];
+  });
+  if (!exerciseDatabase.some((exercise) => exercise.id === next.selectedExercise)) {
+    next.selectedExercise = "bench";
+  }
+  const validFilters = ["全部"].concat(Array.from(new Set(exerciseDatabase.map((exercise) => exercise.group))));
+  if (!next.exerciseFilter || validFilters.indexOf(next.exerciseFilter) === -1) {
+    next.exerciseFilter = "全部";
+  }
+  if (typeof next.exerciseSearch !== "string") next.exerciseSearch = "";
+  return next;
+}
+
 function loadState() {
-  const saved = window.localStorage.getItem(storageKey);
+  const saved = safeReadStorage(storageKey);
   if (!saved) return clone(initialState);
   try {
     const parsed = JSON.parse(saved);
-    const next = { ...clone(initialState), ...parsed };
-    if (!exerciseDatabase.some((exercise) => exercise.id === next.selectedExercise)) {
-      next.selectedExercise = "bench";
-    }
-    if (!next.exerciseFilter || !["全部", ...new Set(exerciseDatabase.map((exercise) => exercise.group))].includes(next.exerciseFilter)) {
-      next.exerciseFilter = "全部";
-    }
-    return next;
+    return normalizeState(parsed);
   } catch {
     return clone(initialState);
   }
 }
 
 function saveState() {
-  window.localStorage.setItem(storageKey, JSON.stringify(state));
+  safeWriteStorage(storageKey, JSON.stringify(state));
+}
+
+function showStorageNotice() {
+  if (storageNoticeShown) return;
+  const workspaceHeading = document.querySelector("#workspace .section-heading");
+  if (!workspaceHeading) return;
+  storageNoticeShown = true;
+  const notice = document.createElement("p");
+  notice.className = "storage-warning";
+  notice.textContent = "当前浏览器限制了本地存储，本次记录可以临时使用，但刷新后可能不会保存。";
+  workspaceHeading.appendChild(notice);
+}
+
+function closestElement(target, selector) {
+  let node = target && target.nodeType === 1 ? target : target && target.parentElement;
+  while (node && node !== document) {
+    if (node.matches && node.matches(selector)) return node;
+    node = node.parentElement;
+  }
+  return null;
+}
+
+function on(selector, eventName, handler) {
+  const element = document.querySelector(selector);
+  if (element) element.addEventListener(eventName, handler);
+}
+
+function showAppError(error) {
+  const workspace = document.querySelector("#workspace");
+  if (!workspace) return;
+  const notice = document.createElement("div");
+  notice.className = "app-error";
+  notice.textContent = "页面功能加载时遇到兼容问题，请刷新后重试。";
+  workspace.insertBefore(notice, workspace.firstElementChild);
+  console.error(error);
 }
 
 function formatCurrency(value) {
@@ -295,7 +364,7 @@ function filteredExercises() {
 
 function renderExerciseFilters() {
   const filter = document.querySelector("#exerciseFilter");
-  const groups = ["全部", ...new Set(exerciseDatabase.map((exercise) => exercise.group))];
+  const groups = ["全部"].concat(Array.from(new Set(exerciseDatabase.map((exercise) => exercise.group))));
   filter.innerHTML = groups.map((group) => `<option value="${group}">${group === "全部" ? "全部 All" : group}</option>`).join("");
   filter.value = state.exerciseFilter;
   document.querySelector("#exerciseSearch").value = state.exerciseSearch;
@@ -369,7 +438,7 @@ function renderTrend() {
   const canvas = document.querySelector("#trendCanvas");
   const items = state.checkins.slice(-7);
   canvas.innerHTML = "";
-  const maxSpend = Math.max(...items.map((item) => Number(item.spending)), 1);
+  const maxSpend = Math.max.apply(null, items.map((item) => Number(item.spending)).concat([1]));
   items.forEach((item) => {
     const spendingHeight = Math.max(8, Math.round((Number(item.spending) / maxSpend) * 170));
     const energyHeight = Math.max(8, Math.round((Number(item.energy) / 10) * 170));
@@ -435,27 +504,46 @@ function enableTrainingReminder() {
   if (!next) return;
   const message = `FitLedger 提醒：${next.day} 训练 ${next.focus}。${next.plan}`;
 
-  if (!("Notification" in window)) {
+  if (!("Notification" in window) || !Notification.requestPermission) {
     alert(message);
     return;
   }
 
+  const notify = () => {
+    try {
+      new Notification("FitLedger 训练提醒", { body: message });
+    } catch (error) {
+      alert(message);
+    }
+  };
+
   if (Notification.permission === "granted") {
-    new Notification("FitLedger 训练提醒", { body: message });
+    notify();
     return;
   }
 
-  Notification.requestPermission().then((permission) => {
+  const permissionResult = Notification.requestPermission();
+  if (!permissionResult || typeof permissionResult.then !== "function") {
+    alert(message);
+    return;
+  }
+  permissionResult.then((permission) => {
     if (permission === "granted") {
-      new Notification("FitLedger 训练提醒", { body: message });
+      notify();
     } else {
       alert(message);
     }
+  }).catch(() => {
+    alert(message);
   });
 }
 
 function setupRevealAnimation() {
   const targets = document.querySelectorAll(".reveal-section, .module, .panel, .audience-grid article, .story-copy, .story-steps");
+  if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+    targets.forEach((target) => target.classList.add("is-visible"));
+    return;
+  }
   if (!("IntersectionObserver" in window)) {
     targets.forEach((target) => target.classList.add("is-visible"));
     return;
@@ -479,123 +567,132 @@ function renderAll() {
   renderReview();
 }
 
-document.querySelector("#expenseForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const amount = Number(document.querySelector("#entryAmount").value);
-  if (!amount) return;
-  state.money.push({
-    type: document.querySelector("#entryType").value,
-    amount,
-    category: document.querySelector("#entryCategory").value,
-    note: document.querySelector("#entryNote").value.trim(),
-    date: todayLabel()
+function bindEvents() {
+  on("#expenseForm", "submit", (event) => {
+    event.preventDefault();
+    const amount = Number(document.querySelector("#entryAmount").value);
+    if (!amount) return;
+    state.money.push({
+      type: document.querySelector("#entryType").value,
+      amount,
+      category: document.querySelector("#entryCategory").value,
+      note: document.querySelector("#entryNote").value.trim(),
+      date: todayLabel()
+    });
+    event.target.reset();
+    saveState();
+    renderAll();
   });
-  event.target.reset();
-  saveState();
-  renderAll();
-});
 
-document.querySelector("#foodName").addEventListener("input", (event) => {
-  const food = findFood(event.target.value);
-  const hint = document.querySelector("#foodHint");
-  if (food) {
-    document.querySelector("#foodCalories").value = food.calories;
-    hint.textContent = `已匹配：${food.name} · ${food.calories} kcal/100g · ${food.category}。可按实际包装手动修改。`;
-  } else {
-    hint.textContent = "未匹配到食物，可自行填写每100g热量。";
-  }
-});
-
-document.querySelector("#foodForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const amount = Number(document.querySelector("#foodAmount").value);
-  const caloriesPer100 = Number(document.querySelector("#foodCalories").value);
-  const calories = (amount / 100) * caloriesPer100;
-  state.foods.push({
-    name: document.querySelector("#foodName").value.trim(),
-    amount,
-    caloriesPer100,
-    meal: document.querySelector("#foodMeal").value,
-    calories,
-    date: todayLabel()
+  on("#foodName", "input", (event) => {
+    const food = findFood(event.target.value);
+    const hint = document.querySelector("#foodHint");
+    if (food) {
+      document.querySelector("#foodCalories").value = food.calories;
+      hint.textContent = `已匹配：${food.name} · ${food.calories} kcal/100g · ${food.category}。可按实际包装手动修改。`;
+    } else {
+      hint.textContent = "未匹配到食物，可自行填写每100g热量。";
+    }
   });
-  event.target.reset();
-  document.querySelector("#foodHint").textContent = "输入食物名称后，会自动匹配常见每100g热量，可手动修改。";
-  saveState();
-  renderAll();
-});
 
-document.querySelector("#trainingForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  state.training.push({
-    day: document.querySelector("#trainingDay").value,
-    focus: document.querySelector("#trainingFocus").value,
-    plan: document.querySelector("#trainingPlan").value.trim(),
-    done: false
+  on("#foodForm", "submit", (event) => {
+    event.preventDefault();
+    const amount = Number(document.querySelector("#foodAmount").value);
+    const caloriesPer100 = Number(document.querySelector("#foodCalories").value);
+    const calories = (amount / 100) * caloriesPer100;
+    state.foods.push({
+      name: document.querySelector("#foodName").value.trim(),
+      amount,
+      caloriesPer100,
+      meal: document.querySelector("#foodMeal").value,
+      calories,
+      date: todayLabel()
+    });
+    event.target.reset();
+    document.querySelector("#foodHint").textContent = "输入食物名称后，会自动匹配常见每100g热量，可手动修改。";
+    saveState();
+    renderAll();
   });
-  event.target.reset();
-  saveState();
-  renderAll();
-});
 
-document.querySelector("#exerciseSearch").addEventListener("input", (event) => {
-  state.exerciseSearch = event.target.value;
-  renderExerciseLibrary();
-});
-
-document.querySelector("#exerciseFilter").addEventListener("change", (event) => {
-  state.exerciseFilter = event.target.value;
-  renderExerciseLibrary();
-});
-
-document.querySelector("#exerciseLibrary").addEventListener("click", (event) => {
-  const card = event.target.closest(".exercise-card");
-  if (!card) return;
-  state.selectedExercise = card.dataset.exercise;
-  saveState();
-  renderExerciseLibrary();
-  if (event.target.closest("button")) useSelectedExerciseTemplate();
-});
-
-document.querySelector("#exerciseDetail").addEventListener("click", (event) => {
-  if (event.target.closest("#useExerciseTemplate")) useSelectedExerciseTemplate();
-});
-
-document.querySelector("#trainingList").addEventListener("click", (event) => {
-  const button = event.target.closest(".complete-button");
-  if (!button) return;
-  const index = Number(button.dataset.index);
-  state.training[index].done = !state.training[index].done;
-  saveState();
-  renderAll();
-});
-
-document.querySelector("#enableReminder").addEventListener("click", enableTrainingReminder);
-
-document.querySelector("#checkinForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  state.checkins.push({
-    date: todayLabel(),
-    weight: Number(document.querySelector("#checkinWeight").value),
-    energy: Number(document.querySelector("#checkinEnergy").value),
-    workout: document.querySelector("#checkinWorkout").value,
-    spending: Number(document.querySelector("#checkinSpending").value)
+  on("#trainingForm", "submit", (event) => {
+    event.preventDefault();
+    state.training.push({
+      day: document.querySelector("#trainingDay").value,
+      focus: document.querySelector("#trainingFocus").value,
+      plan: document.querySelector("#trainingPlan").value.trim(),
+      done: false
+    });
+    event.target.reset();
+    saveState();
+    renderAll();
   });
-  event.target.reset();
-  saveState();
-  renderAll();
-});
 
-document.querySelector("#reviewForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  state.review = {
-    energy: document.querySelector("#reviewEnergy").value,
-    text: document.querySelector("#reviewText").value.trim(),
-    nextFocus: document.querySelector("#nextFocus").value.trim()
-  };
-  saveState();
-  renderAll();
-});
+  on("#exerciseSearch", "input", (event) => {
+    state.exerciseSearch = event.target.value;
+    renderExerciseLibrary();
+  });
 
-renderAll();
-setupRevealAnimation();
+  on("#exerciseFilter", "change", (event) => {
+    state.exerciseFilter = event.target.value;
+    renderExerciseLibrary();
+  });
+
+  on("#exerciseLibrary", "click", (event) => {
+    const card = closestElement(event.target, ".exercise-card");
+    if (!card) return;
+    state.selectedExercise = card.dataset.exercise;
+    saveState();
+    renderExerciseLibrary();
+    if (closestElement(event.target, "button")) useSelectedExerciseTemplate();
+  });
+
+  on("#exerciseDetail", "click", (event) => {
+    if (closestElement(event.target, "#useExerciseTemplate")) useSelectedExerciseTemplate();
+  });
+
+  on("#trainingList", "click", (event) => {
+    const button = closestElement(event.target, ".complete-button");
+    if (!button) return;
+    const index = Number(button.dataset.index);
+    if (!state.training[index]) return;
+    state.training[index].done = !state.training[index].done;
+    saveState();
+    renderAll();
+  });
+
+  on("#enableReminder", "click", enableTrainingReminder);
+
+  on("#checkinForm", "submit", (event) => {
+    event.preventDefault();
+    state.checkins.push({
+      date: todayLabel(),
+      weight: Number(document.querySelector("#checkinWeight").value),
+      energy: Number(document.querySelector("#checkinEnergy").value),
+      workout: document.querySelector("#checkinWorkout").value,
+      spending: Number(document.querySelector("#checkinSpending").value)
+    });
+    event.target.reset();
+    saveState();
+    renderAll();
+  });
+
+  on("#reviewForm", "submit", (event) => {
+    event.preventDefault();
+    state.review = {
+      energy: document.querySelector("#reviewEnergy").value,
+      text: document.querySelector("#reviewText").value.trim(),
+      nextFocus: document.querySelector("#nextFocus").value.trim()
+    };
+    saveState();
+    renderAll();
+  });
+}
+
+try {
+  bindEvents();
+  renderAll();
+  setupRevealAnimation();
+  if (!storageAvailable) showStorageNotice();
+} catch (error) {
+  showAppError(error);
+}
